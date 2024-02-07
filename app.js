@@ -15,6 +15,8 @@ const contactRoute = require("./routes/contact");
 const statisticRoute = require("./routes/statistics");
 const abundantOrderRoute = require("./routes/abundantOrder");
 const promoCodeRoute = require("./routes/promoCode");
+const cron = require('node-cron');
+const axios = require('axios');
 
 
 dotenv.config();
@@ -48,6 +50,16 @@ app.use("/promo", promoCodeRoute);
 app.get("/", async (req, res) => {
     res.send("Selligo backend")
 })
+
+
+cron.schedule('*/9 * * * *', async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/');
+        console.log('API request sent:', response.data);
+    } catch (error) {
+        console.error('Error sending API request:', error);
+    }
+});
 
 app.listen(5000, () => {
     console.log("Backend Server is Running")
